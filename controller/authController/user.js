@@ -5,9 +5,8 @@ import jwt from "jsonwebtoken"; // Import jwt module
 
 const createToken = (email) => {
   const tokenKey = process.env.JWT_KEY;
-  return jwt.sign({ email }, tokenKey, { expiresIn: "3d" });
+  return jwt.sign({ email }, tokenKey, { expiresIn: "10d" });
 };
-
 export const registerController = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -26,7 +25,7 @@ export const registerController = async (req, res) => {
     if (!validator.isStrongPassword(password))
       return res.status(400).json({ msg: "Password must be strong" });
 
-    user = new userModel({ name, email, password });
+    user = new userModel({ name,email,password });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
@@ -45,7 +44,7 @@ export const registerController = async (req, res) => {
     res.status(500).json({ msg: "Server error", error });
   }
 };
-export const loginController = async (req, res) => {
+export const loginController = async (req,res) => {
   const { email, password } = req.body;
 
   try {
@@ -70,7 +69,6 @@ export const loginController = async (req, res) => {
     res.status(500).json({ msg: "Server error", error });
   }
 };
-
 export const findUser = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -94,7 +92,7 @@ export const getUsers = async (req, res) => {
       user,
     });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error });
+    res.status(500).json({ msg:"Server error", error });
 
     console.log("error");
   }
